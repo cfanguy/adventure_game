@@ -14,8 +14,7 @@ var img = document.getElementById("player_r");
 var gameOver = false;
 
 // player is a rectangle with extra properties
-var player = rect(290, 290, 26, 34);
-player.velocity = { x: 0, y: 0 };
+var player, sword;
 
 (function(){
   startGame();
@@ -32,6 +31,7 @@ function startGame() {
 	score = 0;
 	player = null;
 	player = rect(290, 290, 26, 34);
+    sword = rect(-30, -30, 20, 11);
 	player.velocity = { x: 0, y: 0 };
 	gameOver = false;
 	img = document.getElementById("player_r");
@@ -131,7 +131,7 @@ function movePlayer(p, vx, vy) {
 
 
 // move the snake
-function moveSnake(p, vx, vy) {
+function moveSnake(p, vx, vy, index) {
     // move enemy along x axis
     for (var i = 0; i < rects.length; i++) {
         var c = { x: p.x + vx, y: p.y, w: p.w, h: p.h };
@@ -141,7 +141,7 @@ function moveSnake(p, vx, vy) {
 		}
     }
     p.x += vx;
-
+ 
     // move enemy along y axis
     for (var i = 0; i < rects.length; i++) {
         var c = { x: p.x, y: p.y + vy, w: p.w, h: p.h };
@@ -154,6 +154,10 @@ function moveSnake(p, vx, vy) {
 	
 	if (overlap(c, player)) {
 		gameOver = true;
+	}
+    if (overlap(c, sword)) {
+		score += 1000;
+        snakes.splice(index, 1);
 	}
 }
 
@@ -187,36 +191,15 @@ function update() {
 	movePlayer(player, player.velocity.x, player.velocity.y)
 	
 	for(var i = 0; i < snakes.length; i++) {
-		// set first snake to follow player
-		if(i === 0)
-        {
-            if (player.x < snakes[i].x - (i * 8 + i)) {
-                snakes[i].velocity.x = -1;
-            }
-            else {
-                snakes[i].velocity.x = 1;
-            }
-            if (player.y < snakes[i].y - (i * 8 + i)) {
-                snakes[i].velocity.y = -1;
-            }
-            else {
-                snakes[i].velocity.y = 1;
-            }
-            moveSnake(snakes[i], snakes[i].velocity.x, snakes[i].velocity.y);
+		// set snakes to go random places
+        if(score % 40 == 0) {
+            snakes[i].velocity.x = Math.round(Math.random()) == 1 ? 1 : -1;
+            snakes[i].velocity.y = Math.round(Math.random()) == 1 ? 1 : -1;
         }
-		// set other snakes to go random places
-        else
-        {
-			if(score % 40 == 0) {
-				snakes[i].velocity.x = Math.round(Math.random()) == 1 ? 1 : -1;
-				snakes[i].velocity.y = Math.round(Math.random()) == 1 ? 1 : -1;
-			}
-            
-			moveSnake(snakes[i], snakes[i].velocity.x, snakes[i].velocity.y);
-        }
+        
+        moveSnake(snakes[i], snakes[i].velocity.x, snakes[i].velocity.y, i);
 	}
 	
-	score++;
 	document.getElementById("score").innerHTML = score.toString();
 }
 
@@ -245,6 +228,22 @@ function draw() {
         var dImg = document.getElementById('player_dead');
         c.drawImage(dImg, player.x - 6, player.y - 5);
 	}
+    
+    // draw sword on space
+    var swRimg = document.getElementById('sword_r');
+    var swLimg = document.getElementById('sword_l');
+    if(keyPressed[32] === true) {
+        if(img.src.indexOf("player_r") !== -1) {
+            sword.x = player.x + 26;
+            sword.y = player.y + 12;
+            c.drawImage(swRimg, player.x + 26, player.y + 12);
+        }
+        else {
+            sword.x = player.x - 18;
+            sword.y = player.y + 12;
+            c.drawImage(swLimg, player.x - 18, player.y + 12);
+        }
+    }
 
 	// draw level with blocks
 	var blImg = document.getElementById("block");
