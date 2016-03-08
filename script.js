@@ -1,8 +1,8 @@
-var LR, FB, originLR, originFB;
 var rects = [];
 var snakes = [];
 var score = 0;
 var keyPressed = {};
+
 document.onkeydown = function (e) { keyPressed[e.which] = true };
 document.onkeyup = function (e) { keyPressed[e.which] = false };
 
@@ -156,7 +156,7 @@ function moveSnake(p, vx, vy, index) {
 		gameOver = true;
 	}
     if (overlap(c, sword)) {
-		score += 1000;
+		score += 100;
         snakes.splice(index, 1);
 	}
 }
@@ -164,35 +164,15 @@ function moveSnake(p, vx, vy, index) {
 
 
 // Updates the state of the game for the next frame
-function update() {
-    var horizontal = 0, vertical = 0;
-    if (LR > originLR + 6) {
-        horizontal = -1;
-    }
-    else
-    {
-        if (LR < originLR - 6) {
-            horizontal = 1;
-        }
-    }
-
-    if (FB > originFB + 6) {
-        vertical = 1;
-    }
-    else {
-        if (FB < originFB - 6) {
-            vertical = -1;
-        }
-    }
-
+function update(frameNum) {
     player.velocity.x = 3 * (!!keyPressed[68] - !!keyPressed[65]);
     player.velocity.y = 3 * (!!keyPressed[83] - !!keyPressed[87]);
 
-	movePlayer(player, player.velocity.x, player.velocity.y)
+	movePlayer(player, player.velocity.x, player.velocity.y);
 	
 	for(var i = 0; i < snakes.length; i++) {
 		// set snakes to go random places
-        if(score % 40 == 0) {
+        if(frameNum % 40 == 0) {
             snakes[i].velocity.x = Math.round(Math.random()) == 1 ? 1 : -1;
             snakes[i].velocity.y = Math.round(Math.random()) == 1 ? 1 : -1;
         }
@@ -269,15 +249,19 @@ function draw() {
 
 // set up the game loop
 window.onload = function() {
+    var frameNum = 0;
+    
 	setInterval(function() {
 		if(gameOver == false) {
-			update();
+            if(frameNum < 1000) {
+                frameNum++;
+            }
+            else {
+                frameNum = 0;
+            }
+            
+			update(frameNum);
 			draw();
 		}
 	}, 1000 / 60);
-}
-
-function setOrigin(leftRight, frontBack) {
-    originLR = leftRight;
-    originFB = frontBack;
 }
