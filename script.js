@@ -14,7 +14,7 @@ var img = document.getElementById("player_r");
 var gameOver = false;
 
 // player is a rectangle with extra properties
-var player, sword;
+var player, sword, swordUD;
 
 (function(){
   startGame();
@@ -30,8 +30,9 @@ function startGame() {
 	snakes = [];
 	score = 0;
 	player = null;
-	player = rect(390, 390, 26, 34);
+	player = rect(390, 390, 26, 35);
     sword = rect(-30, -30, 20, 11);
+    swordUD = rect(-30, -30, 13, 28);
 	player.velocity = { x: 0, y: 0 };
 	gameOver = false;
 	img = document.getElementById("player_r");
@@ -159,6 +160,10 @@ function moveSnake(p, vx, vy, index) {
 		score += 100;
         snakes.splice(index, 1);
 	}
+    if (overlap(c, swordUD)) {
+		score += 100;
+        snakes.splice(index, 1);
+	}
 }
 
 
@@ -208,6 +213,12 @@ function draw() {
 		else
 			if(keyPressed[65])
 				img = document.getElementById("player_l");
+			else
+				if(keyPressed[83])
+					img = document.getElementById("player_d");
+				else
+					if(keyPressed[87])
+						img = document.getElementById("player_u");
 		c.drawImage(img, player.x - 6, player.y - 5);
 	}
 	else {
@@ -221,17 +232,31 @@ function draw() {
     // draw sword on space key press
     var swRimg = document.getElementById('sword_r');
     var swLimg = document.getElementById('sword_l');
+    var swUimg = document.getElementById('sword_u');
+    var swDimg = document.getElementById('sword_d');
     if(keyPressed[32] === true) {
-        if(img.src.indexOf("player_r") !== -1) {
-            sword.x = player.x + 26;
-            sword.y = player.y + 12;
-            c.drawImage(swRimg, player.x + 26, player.y + 12);
-        }
-        else {
-            sword.x = player.x - 18;
-            sword.y = player.y + 12;
-            c.drawImage(swLimg, player.x - 18, player.y + 12);
-        }
+		switch(img.src.substr(img.src.indexOf("player_"))) {
+			case "player_r.png":
+				sword.x = player.x + 20;
+				sword.y = player.y + 8;
+				c.drawImage(swRimg, player.x + 20, player.y + 8);
+				break;
+			case "player_l.png":
+				sword.x = player.x - 26;
+				sword.y = player.y + 8;
+				c.drawImage(swLimg, player.x - 26, player.y + 8);
+				break;
+			case "player_u.png":
+				swordUD.x = player.x + 11;
+				swordUD.y = player.y - 16;
+				c.drawImage(swUimg, player.x + 11, player.y - 16);
+				break;
+			case "player_d.png":
+				swordUD.x = player.x - 9;
+				swordUD.y = player.y + 16;
+				c.drawImage(swDimg, player.x - 9, player.y + 16);
+				break;
+		}
     }
 
 	// draw level with blocks
