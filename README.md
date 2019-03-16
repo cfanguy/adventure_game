@@ -1,4 +1,3 @@
 # adventure_game
-HTML5 Game
 
-http://cfanguy.github.io/adventure_game/
+HTML5 Canvas API Game
