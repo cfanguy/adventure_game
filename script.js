@@ -223,13 +223,13 @@ function draw() {
         c.drawImage(dImg, player.x - 6, player.y - 5);
 	}
     
-    // draw sword on space key press
+    // draw sword on shift key press
     var swRimg = document.getElementById('sword_r');
     var swLimg = document.getElementById('sword_l');
     var swUimg = document.getElementById('sword_u');
     var swDimg = document.getElementById('sword_d');
 	var xLoc, yLoc, sw;
-    if(keyPressed[32] === true) {
+    if(keyPressed[16] === true) {
 		switch(img.src.substr(img.src.indexOf("player_"))) {
 			case "player_r.png":
 				xLoc = 14, yLoc = -6, sw = swRimg;
