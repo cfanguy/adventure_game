@@ -207,17 +207,29 @@ function draw(frameNum) {
 	
 	// draw player
 	if(!gameOver) {
-		if(keyPressed[68])
+		if(keyPressed[68]) {
 			img = document.getElementById("player_r");
+			swordFrameLength = 0;
+			document.getElementById('sword_r').src = 'img/sword_r.gif' + '?a=' + Math.random();
+		}
 		else
-			if(keyPressed[65])
+			if(keyPressed[65]) {
 				img = document.getElementById("player_l");
+				swordFrameLength = 0;
+				document.getElementById('sword_l').src = 'img/sword_l.gif' + '?a=' + Math.random();
+			}
 			else
-				if(keyPressed[83])
+				if(keyPressed[83]) {
 					img = document.getElementById("player_d");
+					swordFrameLength = 0;
+					document.getElementById('sword_d').src = 'img/sword_d.gif' + '?a=' + Math.random();
+				}
 				else
-					if(keyPressed[87])
+					if(keyPressed[87]) {
 						img = document.getElementById("player_u");
+						swordFrameLength = 0;
+						document.getElementById('sword_u').src = 'img/sword_u.gif' + '?a=' + Math.random();
+					}
 		c.drawImage(img, player.x - 6, player.y - 5);
 	}
 	else {
