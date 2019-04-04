@@ -2,6 +2,7 @@ var rects = [];
 var snakes = [];
 var score = 0;
 var keyPressed = {};
+var swordFrameLength = 0, disableSwordLength = 0;
 
 document.onkeydown = function (e) { keyPressed[e.which] = true };
 document.onkeyup = function (e) { keyPressed[e.which] = false };
@@ -10,6 +11,10 @@ document.getElementById("reset").addEventListener("click", startGame, false);
 
 // set initial player img
 var img = document.getElementById("player_r");
+var swRimg = document.getElementById('sword_r');
+var swLimg = document.getElementById('sword_l');
+var swUimg = document.getElementById('sword_u');
+var swDimg = document.getElementById('sword_d');
 
 var gameOver = false;
 
@@ -193,7 +198,7 @@ function update(frameNum) {
 
 
 // renders a frame
-function draw() {
+function draw(frameNum) {
 	var c = document.getElementById('screen').getContext('2d');
 
 	// draw background
@@ -224,31 +229,7 @@ function draw() {
 	}
     
     // draw sword on shift key press
-    var swRimg = document.getElementById('sword_r');
-    var swLimg = document.getElementById('sword_l');
-    var swUimg = document.getElementById('sword_u');
-    var swDimg = document.getElementById('sword_d');
-	var xLoc, yLoc, sw;
-    if(keyPressed[16] === true) {
-		switch(img.src.substr(img.src.indexOf("player_"))) {
-			case "player_r.png":
-				xLoc = 14, yLoc = -6, sw = swRimg;
-				break;
-			case "player_l.png":
-				xLoc = -24, yLoc = -6, sw = swLimg;
-				break;
-			case "player_u.png":
-				xLoc = -3, yLoc = -8, sw = swUimg;
-				break;
-			case "player_d.png":
-				xLoc = -22, yLoc = 10, sw = swDimg;
-				break;
-		}
-
-		sword.x = player.x + xLoc;
-		sword.y = player.y + yLoc;
-		c.drawImage(sw, player.x + xLoc, player.y + yLoc);
-    }
+    createSwordImage(c, frameNum);
 
 	// draw level with blocks
 	var blImg = document.getElementById("block");
@@ -272,21 +253,65 @@ function draw() {
 }
 
 
+function createSwordImage(c, frameNum) {
+	var xLoc, yLoc, sw, shiftPress = false;
+
+	var frameCheck = swordFrameLength !== 0;
+	var swordCheck = disableSwordLength === frameNum || disableSwordLength === 0;
+	if(!frameCheck && swordCheck) {
+		shiftPress = keyPressed[16];
+		disableSwordLength = 0;
+	}
+
+	if(shiftPress || frameCheck) {
+		// set swordFrameLength to sword animation length
+		if(swordFrameLength == 0) {
+			swordFrameLength = frameNum + 28;
+			disableSwordLength = frameNum + 60;
+		}
+		else {
+			if(swordFrameLength == frameNum) {
+				swordFrameLength = 0;
+			}
+		}
+
+		switch(img.src.substr(img.src.indexOf("player_"))) {
+			case "player_r.png":
+				xLoc = 14, yLoc = -6, sw = swRimg;
+				break;
+			case "player_l.png":
+				xLoc = -24, yLoc = -6, sw = swLimg;
+				break;
+			case "player_u.png":
+				xLoc = -3, yLoc = -8, sw = swUimg;
+				break;
+			case "player_d.png":
+				xLoc = -22, yLoc = 10, sw = swDimg;
+				break;
+		}
+
+		sword.x = player.x + xLoc;
+		sword.y = player.y + yLoc;
+		c.drawImage(sw, player.x + xLoc, player.y + yLoc);
+    }
+}
+
+
 // set up the game loop
 window.onload = function() {
-    var frameNum = 0;
+    var frameNum = 1;
     
 	setInterval(function() {
 		if(gameOver == false) {
-            if(frameNum < 1000) {
+            if(frameNum < 100000) {
                 frameNum++;
             }
             else {
-                frameNum = 0;
+                frameNum = 1;
             }
             
 			update(frameNum);
-			draw();
+			draw(frameNum);
 		}
 	}, 1000 / 60);
 }
