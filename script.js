@@ -3,6 +3,7 @@ var snakes = [];
 var score = 0;
 var keyPressed = {};
 var swordFrameLength = 0, disableSwordLength = 0;
+var playerHealth = 3;
 
 document.onkeydown = function (e) { keyPressed[e.which] = true };
 document.onkeyup = function (e) { keyPressed[e.which] = false };
@@ -15,6 +16,7 @@ var swRimg = document.getElementById('sword_r');
 var swLimg = document.getElementById('sword_l');
 var swUimg = document.getElementById('sword_u');
 var swDimg = document.getElementById('sword_d');
+var heart = document.getElementById('heart');
 
 var gameOver = false;
 
@@ -125,13 +127,13 @@ function movePlayer(p, vx, vy) {
 	}
 	p.y += vy
 	
-	for(i = 0; i < snakes.length; i++) {
+	/*for(i = 0; i < snakes.length; i++) {
 		if (snakes[i] != null) {
 			if (overlap(c, snakes[i])) {
 				gameOver = true;
 			}
 		}
-	}
+	}*/
 }
 
 
@@ -158,7 +160,14 @@ function moveSnake(p, vx, vy, index) {
     p.y += vy;
 	
 	if (overlap(c, player)) {
-		gameOver = true;
+		if(playerHealth > 1) {
+			playerHealth--;
+			snakes.splice(index, 1);
+		}
+		else {
+			gameOver = true;
+			playerHealth--;
+		}
 	}
     if (overlap(c, sword)) {
 		score += 100;
@@ -204,6 +213,8 @@ function draw(frameNum) {
 	// draw background
 	c.fillStyle = '#000';
 	c.fillRect(0, 0, c.canvas.width, c.canvas.height);
+
+	drawHealth(c);
 	
 	// draw player
 	if(!gameOver) {
@@ -265,6 +276,14 @@ function draw(frameNum) {
 }
 
 
+function drawHealth(c) {
+	for(var i = 1; i <= playerHealth; i++) {
+		var offsetX = -5;
+		c.drawImage(heart, offsetX + (i * 20) + 10, 20);
+	}
+}
+
+
 function createSwordImage(c, frameNum) {
 	var xLoc, yLoc, sw, shiftPress = false;
 
@@ -279,7 +298,7 @@ function createSwordImage(c, frameNum) {
 		// set swordFrameLength to sword animation length
 		if(swordFrameLength == 0) {
 			swordFrameLength = frameNum + 28;
-			disableSwordLength = frameNum + 60;
+			disableSwordLength = frameNum + 50;
 		}
 		else {
 			if(swordFrameLength == frameNum) {
