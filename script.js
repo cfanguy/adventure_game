@@ -37,6 +37,7 @@ function startGame() {
 	rects = [];
 	snakes = [];
 	score = 0;
+	playerHealth = 3;
 	player = null;
 	player = rect(390, 390, 26, 35);
     sword = rect(30, 30, 40, 25);
