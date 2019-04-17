@@ -17,6 +17,7 @@ var swLimg = document.getElementById('sword_l');
 var swUimg = document.getElementById('sword_u');
 var swDimg = document.getElementById('sword_d');
 var heart = document.getElementById('heart');
+var heartPickup = document.getElementById('heartPickup');
 
 var gameOver = false;
 
@@ -36,11 +37,12 @@ function snakeEnemy(x, y, w, h) {
 function startGame() {
 	rects = [];
 	snakes = [];
+	healthPickups = [];
 	score = 0;
 	playerHealth = 3;
 	player = null;
 	player = rect(390, 390, 26, 35);
-    sword = rect(30, 30, 40, 25);
+	sword = rect(30, 30, 40, 25);
 	player.velocity = { x: 0, y: 0 };
 	gameOver = false;
 
@@ -127,14 +129,13 @@ function movePlayer(p, vx, vy) {
 		}
 	}
 	p.y += vy
-	
-	/*for(i = 0; i < snakes.length; i++) {
-		if (snakes[i] != null) {
-			if (overlap(c, snakes[i])) {
-				gameOver = true;
-			}
+
+	for (i = 0; i < healthPickups.length; i++) {
+		if (overlap(c, healthPickups[i])) {
+			playerHealth++;
+			healthPickups.splice(i, 1);
 		}
-	}*/
+	}
 }
 
 
@@ -172,7 +173,11 @@ function moveSnake(p, vx, vy, index) {
 	}
     if (overlap(c, sword)) {
 		score += 100;
-        snakes.splice(index, 1);
+		snakes.splice(index, 1);
+
+		if(Math.floor((Math.random() * 10) + 1) == 9) {
+			healthPickups.push(rect(p.x, p.y, 12, 12));
+		}
 	}
 }
 
@@ -273,7 +278,13 @@ function draw(frameNum) {
                 c.drawImage(snImg, snakes[i].x, snakes[i].y);
             }
         }
-    }
+	}
+	
+	if(healthPickups.length > 0) {
+		for(var i = 0; i < healthPickups.length; i++) {
+			c.drawImage(heartPickup, healthPickups[i].x, healthPickups[i].y);
+		}
+	}
 }
 
 
