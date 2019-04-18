@@ -45,7 +45,7 @@ function startGame() {
 	playerHealth = 3;
 	player = null;
 	player = rect(390, 390, 26, 35);
-	sword = rect(30, 30, 40, 25);
+	sword = rect(30, 30, 40, 40);
 	player.velocity = { x: 0, y: 0 };
 	gameOver = false;
 
@@ -188,10 +188,6 @@ function moveSnake(p, vx, vy, index) {
 // Updates the state of the game for the next frame
 function update() {
 	frameNum += 1;
-	frameSet += 1;
-	if(frameSet > 45) {
-		frameSet = 0;
-	}
 
     player.velocity.x = 3 * (!!keyPressed[68] - !!keyPressed[65]);
     player.velocity.y = 3 * (!!keyPressed[83] - !!keyPressed[87]);
@@ -223,6 +219,13 @@ function update() {
 
 // renders a frame
 function draw() {
+	if(frameSet >= 1) {
+		frameSet += 1;
+	}
+	if(frameSet > 45) {
+		frameSet = 0;
+	}
+
 	var c = document.getElementById('screen').getContext('2d');
 
 	// draw background
@@ -258,8 +261,14 @@ function draw() {
         c.drawImage(dImg, player.x - 6, player.y - 5);
 	}
     
-    // draw sword on shift key press
-    createSwordAnimation(c, frameNum);
+	// draw sword on F key press
+	if(keyPressed[70] && frameSet == 0) {
+		frameSet = 1;
+	}
+
+	if(frameSet != 0) {
+		createSwordAnimation(c, frameNum);
+	}
 
 	// draw level with blocks
 	var blImg = document.getElementById("block");
@@ -297,37 +306,44 @@ function drawHealth(c) {
 }
 
 
-function createSwordAnimation(c, frameNum) {
-	var xLoc, yLoc, sw, shiftPress = false;
+function createSwordAnimation(c) {
+	var xLoc, yLoc, sw, lr = false;
 
 		switch(img.src.substr(img.src.indexOf("player_"))) {
 			case "player_r.png":
-				xLoc = 14, yLoc = -6, sw = swRimg;
+				xLoc = 14, yLoc = -6, sw = swRimg, lr = true;
 				break;
 			case "player_l.png":
-				xLoc = -24, yLoc = -6, sw = swLimg;
+				xLoc = -24, yLoc = -6, sw = swLimg, lr = true;
 				break;
 			case "player_u.png":
-				xLoc = -3, yLoc = -8, sw = swUimg;
+				xLoc = -3, yLoc = -8, sw = swUimg, lr = false;
 				break;
 			case "player_d.png":
-				xLoc = -22, yLoc = 10, sw = swDimg;
+				xLoc = -22, yLoc = 10, sw = swDimg, lr = false;
 				break;
 		}
 
 		sword.x = player.x + xLoc;
 		sword.y = player.y + yLoc;
+		var imgX = 0, imgY = 0;
 
-		console.log(Math.round(frameSet / 5));
+		if(lr) {
+			imgY = Math.round(frameSet / 5) * 40;
+		}
+		else {
+			imgX = Math.round(frameSet / 5) * 40;
+		}
+
 		c.drawImage(sw,
-		    Math.round(frameSet / 5) * 40,
-		    0,
-		    40,
-		    25,
+		    imgX,
+		    imgY,
+		    sword.w,
+		    sword.h,
 		    sword.x,
 		    sword.y,
-		    40,
-		    25);
+		    sword.w,
+		    sword.h);
 }
 
 
