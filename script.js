@@ -2,8 +2,9 @@ var rects = [];
 var snakes = [];
 var score = 0;
 var keyPressed = {};
-var swordFrameLength = 0, disableSwordLength = 0;
 var playerHealth = 3;
+
+var frameNum = 0, frameSet = 0, numberOfFrames = 9;
 
 document.onkeydown = function (e) { keyPressed[e.which] = true };
 document.onkeyup = function (e) { keyPressed[e.which] = false };
@@ -12,10 +13,12 @@ document.getElementById("reset").addEventListener("click", startGame, false);
 
 // set initial player img
 var img = document.getElementById("player_r");
+
 var swRimg = document.getElementById('sword_r');
 var swLimg = document.getElementById('sword_l');
 var swUimg = document.getElementById('sword_u');
 var swDimg = document.getElementById('sword_d');
+
 var heart = document.getElementById('heart');
 var heartPickup = document.getElementById('heartPickup');
 
@@ -183,7 +186,13 @@ function moveSnake(p, vx, vy, index) {
 
 
 // Updates the state of the game for the next frame
-function update(frameNum) {
+function update() {
+	frameNum += 1;
+	frameSet += 1;
+	if(frameSet > 45) {
+		frameSet = 0;
+	}
+
     player.velocity.x = 3 * (!!keyPressed[68] - !!keyPressed[65]);
     player.velocity.y = 3 * (!!keyPressed[83] - !!keyPressed[87]);
 
@@ -213,7 +222,7 @@ function update(frameNum) {
 
 
 // renders a frame
-function draw(frameNum) {
+function draw() {
 	var c = document.getElementById('screen').getContext('2d');
 
 	// draw background
@@ -226,26 +235,18 @@ function draw(frameNum) {
 	if(!gameOver) {
 		if(keyPressed[68]) {
 			img = document.getElementById("player_r");
-			swordFrameLength = 0;
-			document.getElementById('sword_r').src = 'img/sword_r.gif' + '?a=' + Math.random();
 		}
 		else
 			if(keyPressed[65]) {
 				img = document.getElementById("player_l");
-				swordFrameLength = 0;
-				document.getElementById('sword_l').src = 'img/sword_l.gif' + '?a=' + Math.random();
 			}
 			else
 				if(keyPressed[83]) {
 					img = document.getElementById("player_d");
-					swordFrameLength = 0;
-					document.getElementById('sword_d').src = 'img/sword_d.gif' + '?a=' + Math.random();
 				}
 				else
 					if(keyPressed[87]) {
 						img = document.getElementById("player_u");
-						swordFrameLength = 0;
-						document.getElementById('sword_u').src = 'img/sword_u.gif' + '?a=' + Math.random();
 					}
 		c.drawImage(img, player.x - 6, player.y - 5);
 	}
@@ -258,7 +259,7 @@ function draw(frameNum) {
 	}
     
     // draw sword on shift key press
-    createSwordImage(c, frameNum);
+    createSwordAnimation(c, frameNum);
 
 	// draw level with blocks
 	var blImg = document.getElementById("block");
@@ -296,27 +297,8 @@ function drawHealth(c) {
 }
 
 
-function createSwordImage(c, frameNum) {
+function createSwordAnimation(c, frameNum) {
 	var xLoc, yLoc, sw, shiftPress = false;
-
-	var frameCheck = swordFrameLength !== 0;
-	var swordCheck = disableSwordLength === frameNum || disableSwordLength === 0;
-	if(!frameCheck && swordCheck) {
-		shiftPress = keyPressed[16];
-		disableSwordLength = 0;
-	}
-
-	if(shiftPress || frameCheck) {
-		// set swordFrameLength to sword animation length
-		if(swordFrameLength == 0) {
-			swordFrameLength = frameNum + 28;
-			disableSwordLength = frameNum + 50;
-		}
-		else {
-			if(swordFrameLength == frameNum) {
-				swordFrameLength = 0;
-			}
-		}
 
 		switch(img.src.substr(img.src.indexOf("player_"))) {
 			case "player_r.png":
@@ -335,26 +317,26 @@ function createSwordImage(c, frameNum) {
 
 		sword.x = player.x + xLoc;
 		sword.y = player.y + yLoc;
-		c.drawImage(sw, player.x + xLoc, player.y + yLoc);
-    }
+
+		console.log(Math.round(frameSet / 5));
+		c.drawImage(sw,
+		    Math.round(frameSet / 5) * 40,
+		    0,
+		    40,
+		    25,
+		    sword.x,
+		    sword.y,
+		    40,
+		    25);
 }
 
 
 // set up the game loop
 window.onload = function() {
-    var frameNum = 1;
-    
 	setInterval(function() {
-		if(gameOver == false) {
-            if(frameNum < 100000) {
-                frameNum++;
-            }
-            else {
-                frameNum = 1;
-            }
-            
-			update(frameNum);
-			draw(frameNum);
+		if(gameOver == false) {            
+			update();
+			draw();
 		}
 	}, 1000 / 60);
 }
