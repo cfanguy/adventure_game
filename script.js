@@ -50,18 +50,23 @@ function startGame() {
 	gameOver = false;
 
 	createSnakes();
-	
-	// horizontal blocks
-	for(var i = 0; i < 800; i+=20) {
-		rects.push(rect(i, 0, 20, 20));
-		rects.push(rect(i, 780, 20, 20));
-	}
+
+	loadArea("topLeft");
+}
 
 
-	// vertical blocks
-	for(var i = 0; i < 800; i+=20) {
-		rects.push(rect(0, i, 20, 20));
-		rects.push(rect(780, i, 20, 20));
+// draw the player area using levels script file
+function loadArea(areaName) {
+	for(var i = 0; i < areas[areaName].length; i++) {
+		for(var n = 0; n < areas[areaName][i].length; n ++) {
+			switch (areas[areaName][i][n]) {
+				case "+":
+					rects.push(rect(n * 20, i * 20, 20, 20));
+					break;
+				case "-":
+					break;
+			}
+		}
 	}
 }
 
