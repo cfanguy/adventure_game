@@ -71,6 +71,16 @@ function loadArea(areaName) {
 					block.type = "stone";
 					rects.push(block);
 					break;
+				case "^":
+					block = rect(n * 20, i * 20, 20, 20);
+					block.type = "treeTop";
+					rects.push(block);
+					break;
+				case "x":
+					block = rect(n * 20, i * 20, 20, 20);
+					block.type = "treeBottom";
+					rects.push(block);
+					break;
 				case "-":
 					break;
 			}
@@ -286,6 +296,8 @@ function draw() {
 	// draw level with blocks
 	var boundImg = document.getElementById("boundary");
 	var stoneImg = document.getElementById("stone");
+	var treeTopImg = document.getElementById("treeTop");
+	var treeBottomImg = document.getElementById("treeBottom");
 	
 	// default boundary block type is boundary block
 	var imgType = boundImg;
@@ -298,6 +310,12 @@ function draw() {
 				break;
 			case "stone":
 				imgType = stoneImg;
+				break;
+			case "treeTop":
+				imgType = treeTopImg;
+				break;
+			case "treeBottom":
+				imgType = treeBottomImg;
 				break;
 		}
 		c.drawImage(imgType, r.x, r.y);
