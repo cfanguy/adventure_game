@@ -59,9 +59,17 @@ function startGame() {
 function loadArea(areaName) {
 	for(var i = 0; i < areas[areaName].length; i++) {
 		for(var n = 0; n < areas[areaName][i].length; n ++) {
+			var block;
 			switch (areas[areaName][i][n]) {
 				case "+":
-					rects.push(rect(n * 20, i * 20, 20, 20));
+					block = rect(n * 20, i * 20, 20, 20);
+					block.type = "boundary";
+					rects.push(block);
+					break;
+				case "o":
+					block = rect(n * 20, i * 20, 20, 20);
+					block.type = "stone";
+					rects.push(block);
 					break;
 				case "-":
 					break;
@@ -276,10 +284,23 @@ function draw() {
 	}
 
 	// draw level with blocks
-	var blImg = document.getElementById("block");
+	var boundImg = document.getElementById("boundary");
+	var stoneImg = document.getElementById("stone");
+	
+	// default boundary block type is boundary block
+	var imgType = boundImg;
+
 	for (var i = 0; i < rects.length; i++) {
 		var r = rects[i];
-		c.drawImage(blImg, r.x, r.y);
+		switch (rects[i].type) {
+			case "boundary":
+				imgType = boundImg;
+				break;
+			case "stone":
+				imgType = stoneImg;
+				break;
+		}
+		c.drawImage(imgType, r.x, r.y);
 	}
 	
 	var snImg = document.getElementById('snake_l');
