@@ -3,13 +3,12 @@ var snakes = [];
 var score = 0;
 var keyPressed = {};
 var playerHealth = 3;
+var areaName = "topLeft";
 
 var frameNum = 0, frameSet = 0, numberOfFrames = 9;
 
 document.onkeydown = function (e) { keyPressed[e.which] = true };
 document.onkeyup = function (e) { keyPressed[e.which] = false };
-
-document.getElementById("reset").addEventListener("click", startGame, false);
 
 // set initial player img
 var img = document.getElementById("player_r");
@@ -25,10 +24,10 @@ var heartPickup = document.getElementById('heartPickup');
 var gameOver = false;
 
 // player is a rectangle with extra properties
-var player, sword;
+var player = null, sword;
 
 (function(){
-  startGame();
+	loadGame();
 })();
 
 
@@ -37,26 +36,29 @@ function snakeEnemy(x, y, w, h) {
 }
 
 
-function startGame() {
+function loadGame() {
 	rects = [];
 	snakes = [];
 	healthPickups = [];
 	score = 0;
 	playerHealth = 3;
-	player = null;
-	player = rect(390, 390, 26, 35);
+	if(player === null) {
+		player = rect(390, 390, 26, 35);
+	}
 	sword = rect(30, 30, 40, 40);
 	player.velocity = { x: 0, y: 0 };
 	gameOver = false;
 
-	createSnakes();
-
-	loadArea("topLeft");
+	loadArea();
+	//createSnakes();
 }
 
 
 // draw the player area using levels script file
-function loadArea(areaName) {
+function loadArea() {
+	var c = document.getElementById('screen').getContext('2d');
+	c.clearRect(0, 0, c.width, c.height);
+	
 	for(var i = 0; i < areas[areaName].length; i++) {
 		for(var n = 0; n < areas[areaName][i].length; n ++) {
 			var block;
@@ -135,6 +137,58 @@ function overlap(a, b) {
 // as far as we can without colliding with a solid rectangle
 function movePlayer(p, vx, vy) {
 	var i, c;
+
+	// move right
+	if(p.x > 800) {
+		if(areaName.indexOf("top") >= 0) {
+			areaName = "topRight";
+		}
+		else {
+			areaName = "bottomRight";
+		}
+
+		loadGame();
+		p.x = 5;
+	}
+
+	// move left
+	if(p.x < 0) {
+		if(areaName.indexOf("top") >= 0) {
+			areaName = "topLeft";
+		}
+		else {
+			areaName = "bottomLeft";
+		}
+
+		loadGame();
+		p.x = 795;
+	}
+
+	// move down	
+	if(p.y > 800) {
+		if(areaName.indexOf("Left") >= 0) {
+			areaName = "bottomLeft";
+		}
+		else {
+			areaName = "bottomRight";
+		}
+
+		loadGame();
+		p.y = 5;
+	}
+
+	// move up
+	if(p.y < 0) {
+		if(areaName.indexOf("Left") >= 0) {
+			areaName = "topLeft";
+		}
+		else {
+			areaName = "topRight";
+		}
+
+		loadGame();
+		p.y = 795;
+	}
 
     // Move rectangle along x axis
 	for (i = 0; i < rects.length; i++) {
@@ -399,4 +453,12 @@ window.onload = function() {
 			draw();
 		}
 	}, 1000 / 60);
+}
+
+
+
+document.getElementById("reset").addEventListener("click", reset, false);
+function reset() {
+	areaName = "topLeft";
+	loadGame();
 }
