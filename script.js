@@ -36,9 +36,15 @@ function snakeEnemy(x, y, w, h) {
 }
 
 
+function batEnemy(x, y, w, h) {
+    return { x: x, y: y, w: w, h: h };
+}
+
+
 function loadGame() {
 	rects = [];
 	snakes = [];
+	bats = [];
 	healthPickups = [];
 	score = 0;
 	playerHealth = 3;
@@ -83,6 +89,14 @@ function loadArea() {
 					block.type = "treeBottom";
 					rects.push(block);
 					break;
+				case "S":
+					snakes.push(snakeEnemy(n * 20, i * 20, 30, 15));
+					snakes[snakes.length - 1].velocity = { x: 0, y: 0 };
+					break;
+				case "B":
+					bats.push(batEnemy(n * 20, i * 20, 30, 15));
+					bats[bats.length - 1].velocity = { x: 0, y: 0 };
+				break;
 				case "-":
 					break;
 			}
@@ -93,36 +107,6 @@ function loadArea() {
 
 function rect(x, y, w, h) {
 	return { x: x, y: y, w: w, h: h }
-}
-
-
-function createSnakes() {
-	snakes.push(snakeEnemy(160, 160, 25, 25));
-	snakes[0].velocity = { x: 0, y: 0 };
-	snakes.push(snakeEnemy(600, 160, 25, 25));
-	snakes[1].velocity = { x: 0, y: 0 };
-	snakes.push(snakeEnemy(160, 600, 25, 25));
-	snakes[2].velocity = { x: 0, y: 0 };
-	snakes.push(snakeEnemy(600, 600, 25, 25));
-	snakes[3].velocity = { x: 0, y: 0 };
-	
-	snakes.push(snakeEnemy(200, 200, 25, 25));
-	snakes[4].velocity = { x: 0, y: 0 };
-	snakes.push(snakeEnemy(560, 200, 25, 25));
-	snakes[5].velocity = { x: 0, y: 0 };
-	snakes.push(snakeEnemy(200, 560, 25, 25));
-	snakes[6].velocity = { x: 0, y: 0 };
-	snakes.push(snakeEnemy(560, 560, 25, 25));
-	snakes[7].velocity = { x: 0, y: 0 };
-	
-	snakes.push(snakeEnemy(180, 180, 25, 25));
-	snakes[8].velocity = { x: 0, y: 0 };
-	snakes.push(snakeEnemy(580, 180, 25, 25));
-	snakes[9].velocity = { x: 0, y: 0 };
-	snakes.push(snakeEnemy(180, 580, 25, 25));
-	snakes[10].velocity = { x: 0, y: 0 };
-	snakes.push(snakeEnemy(580, 580, 25, 25));
-	snakes[11].velocity = { x: 0, y: 0 };
 }
 
 
@@ -219,45 +203,78 @@ function movePlayer(p, vx, vy) {
 }
 
 
-// move the snake
-function moveSnake(p, vx, vy, index) {
-    // move enemy along x axis
-    for (var i = 0; i < rects.length; i++) {
-        var c = { x: p.x + vx, y: p.y, w: p.w, h: p.h };
+// move the enemy
+function moveEnemy(p, vx, vy, index, enemy) {
+	// move enemy along x axis, checking blocks and if within frame
+	for (i = 0; i < rects.length; i++) {
+		c = { x: p.x + vx, y: p.y, w: p.w, h: p.h }
 		if (overlap(c, rects[i])) {
 			if (vx < 0) vx = rects[i].x + rects[i].w - p.x
 			else if (vx > 0) vx = rects[i].x - p.x - p.w
 		}
-    }
-    p.x += vx;
+	}
+	if(p.x < 20) {
+		p.x = 21;
+		p.x -= vx;
+	}
+	else if (p.x > 780) {
+		p.x = 759;
+		p.x -= vx;
+	}
+	else {
+		p.x += vx;
+	}
+    
  
-    // move enemy along y axis
-    for (var i = 0; i < rects.length; i++) {
-        var c = { x: p.x, y: p.y + vy, w: p.w, h: p.h };
+	// move enemy along y axis, checking blocks and if within frame
+	for (i = 0; i < rects.length; i++) {
+		c = { x: p.x, y: p.y + vy, w: p.w, h: p.h }
 		if (overlap(c, rects[i])) {
 			if (vy < 0) vy = rects[i].y + rects[i].h - p.y
 			else if (vy > 0) vy = rects[i].y - p.y - p.h
 		}
-    }
-    p.y += vy;
+	}
+    if(p.y < 20) {
+		p.y = 21;
+		p.y -= vy;
+	}
+	else if (p.y > 780) {
+		p.y = 759;
+		p.y -= vy;
+	}
+	else {
+		p.y += vy;
+	}
 	
-	if (overlap(c, player)) {
+	if (overlap(p, player)) {
 		if(playerHealth > 1) {
 			playerHealth--;
-			snakes.splice(index, 1);
+			removeEnemy(enemy, index);
 		}
 		else {
 			gameOver = true;
 			playerHealth--;
 		}
 	}
-    if (overlap(c, sword)) {
+    if (overlap(p, sword)) {
 		score += 100;
-		snakes.splice(index, 1);
+		removeEnemy(enemy, index);
 
 		if(Math.floor((Math.random() * 10) + 1) == 9) {
 			healthPickups.push(rect(p.x, p.y, 12, 12));
 		}
+	}
+}
+
+
+function removeEnemy(enemy, index) {
+	switch (enemy) {
+		case "snake":
+			snakes.splice(index, 1);
+			break;
+		case "bat":
+			bats.splice(index, 1);
+			break;
 	}
 }
 
@@ -277,18 +294,29 @@ function update() {
             if(frameNum % 40 === 0 || frameNum === 1) {
                 snakes[i].velocity.x = Math.floor(Math.random() * 3 - 1);
                 snakes[i].velocity.y = Math.floor(Math.random() * 3 - 1);
-            }
+			}
         }
-        moveSnake(snakes[i], snakes[i].velocity.x, snakes[i].velocity.y, i);
-    }
+        moveEnemy(snakes[i], snakes[i].velocity.x, snakes[i].velocity.y, i, "snake");
+	}
+	
+	for(var i = 0; i < bats.length; i++) {
+        if(frameNum === 1 || Math.round(Math.random()) === 1) {
+			// set bats to go to random places at a faster pace
+            if(frameNum % 40 === 0 || frameNum === 1) {
+                bats[i].velocity.x = Math.floor(Math.random() * 4 - 1);
+                bats[i].velocity.y = Math.floor(Math.random() * 4 - 1);
+			}
+		}
+        moveEnemy(bats[i], bats[i].velocity.x, bats[i].velocity.y, i, "bat");
+	}
     
-    if(frameNum % 120 === 0 && frameNum !== 0) {
+    /*if(frameNum % 120 === 0 && frameNum !== 0) {
         var newSnakeX = Math.round(Math.random()) === 1 ? 700 : 260;
         var newSnakeY = Math.round(Math.random()) === 1 ? 700 : 260;
         
         snakes.push(snakeEnemy(newSnakeX, newSnakeY, 25, 25));
         snakes[snakes.length - 1].velocity = { x: 0, y: 0 };
-    }
+    }*/
 	
 	document.getElementById("score").innerHTML = score.toString();
 }
@@ -385,6 +413,13 @@ function draw() {
             else {
                 c.drawImage(snImg, snakes[i].x, snakes[i].y);
             }
+        }
+	}
+
+	var batImg = document.getElementById('bat');
+    if (bats.length > 0) {
+        for (var i = 0; i < bats.length; i++) {
+			c.drawImage(batImg, bats[i].x, bats[i].y);
         }
 	}
 	
