@@ -3,7 +3,7 @@ var snakes = [];
 var score = 0;
 var keyPressed = {};
 var playerHealth = 3;
-var areaName = "topLeft";
+var currLvlArr = { x: 0, y: 0 };
 
 var frameNum = 0, frameSet = 0, numberOfFrames = 9;
 
@@ -27,7 +27,7 @@ var gameOver = false;
 var player = null, sword;
 
 (function(){
-	loadGame();
+	loadGame(areas[0][0]);
 })();
 
 
@@ -41,7 +41,7 @@ function batEnemy(x, y, w, h) {
 }
 
 
-function loadGame() {
+function loadGame(lvlArray) {
 	rects = [];
 	snakes = [];
 	bats = [];
@@ -55,20 +55,20 @@ function loadGame() {
 	player.velocity = { x: 0, y: 0 };
 	gameOver = false;
 
-	loadArea();
+	loadArea(lvlArray);
 	//createSnakes();
 }
 
 
 // draw the player area using levels script file
-function loadArea() {
+function loadArea(lvlArray) {
 	var c = document.getElementById('screen').getContext('2d');
 	c.clearRect(0, 0, c.width, c.height);
 	
-	for(var i = 0; i < areas[areaName].length; i++) {
-		for(var n = 0; n < areas[areaName][i].length; n ++) {
+	for(var i = 0; i < lvlArray.length; i++) {
+		for(var n = 0; n < lvlArray[i].length; n ++) {
 			var block;
-			switch (areas[areaName][i][n]) {
+			switch (lvlArray[i][n]) {
 				case "+":
 					block = rect(n * 20, i * 20, 20, 20);
 					block.type = "boundary";
@@ -123,55 +123,63 @@ function movePlayer(p, vx, vy) {
 	var i, c;
 
 	// move right
-	if(p.x > 800) {
-		if(areaName.indexOf("top") >= 0) {
+	if(p.x > 960) {
+		/*if(areas[currLvlArr.x, currLvlArr.y].indexOf("top") >= 0) {
 			areaName = "topRight";
 		}
 		else {
 			areaName = "bottomRight";
-		}
+		}*/
 
-		loadGame();
+		currLvlArr.x += 1;
+
+		loadGame(areas[currLvlArr.x][currLvlArr.y]);
 		p.x = 5;
 	}
 
 	// move left
 	if(p.x < 0) {
-		if(areaName.indexOf("top") >= 0) {
+		/*if(areaName.indexOf("top") >= 0) {
 			areaName = "topLeft";
 		}
 		else {
 			areaName = "bottomLeft";
-		}
+		}*/
 
-		loadGame();
-		p.x = 795;
+		currLvlArr.x -= 1;
+
+		loadGame(areas[currLvlArr.x][currLvlArr.y]);
+		p.x = 955;
 	}
 
 	// move down	
-	if(p.y > 800) {
-		if(areaName.indexOf("Left") >= 0) {
+	if(p.y > 540) {
+		/*if(areaName.indexOf("Left") >= 0) {
 			areaName = "bottomLeft";
 		}
 		else {
 			areaName = "bottomRight";
-		}
+		}*/
 
-		loadGame();
+		currLvlArr.y += 1;
+
+		loadGame(areas[currLvlArr.x][currLvlArr.y]);
 		p.y = 5;
 	}
 
 	// move up
 	if(p.y < 0) {
-		if(areaName.indexOf("Left") >= 0) {
+		/*if(areaName.indexOf("Left") >= 0) {
 			areaName = "topLeft";
 		}
 		else {
 			areaName = "topRight";
-		}
+		}*/
 
-		loadGame();
-		p.y = 795;
+		currLvlArr.y -= 1;
+
+		loadGame(areas[currLvlArr.x][currLvlArr.y]);
+		p.y = 535;
 	}
 
     // Move rectangle along x axis
