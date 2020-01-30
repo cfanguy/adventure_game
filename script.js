@@ -13,10 +13,17 @@ document.onkeyup = function (e) { keyPressed[e.which] = false };
 // set initial player img
 var img = document.getElementById("player_r");
 
+// sword animation
 var swRimg = document.getElementById('sword_r');
 var swLimg = document.getElementById('sword_l');
 var swUimg = document.getElementById('sword_u');
 var swDimg = document.getElementById('sword_d');
+
+// warscythe animation
+var wsRimg = document.getElementById('scythe_r');
+var wsLimg = document.getElementById('scythe_l');
+var wsUimg = document.getElementById('scythe_u');
+var wsDimg = document.getElementById('scythe_d');
 
 var heart = document.getElementById('heart');
 var heartPickup = document.getElementById('heartPickup');
@@ -24,7 +31,7 @@ var heartPickup = document.getElementById('heartPickup');
 var gameOver = false;
 
 // player is a rectangle with extra properties
-var player = null, sword;
+var player = null, sword, scythe, currWep;
 
 (function(){
 	loadGame(areas[0][0]);
@@ -49,11 +56,13 @@ function loadGame(lvlArray) {
 	score = 0;
 	playerHealth = 3;
 	if(player === null) {
-		player = rect(390, 390, 26, 35);
+		player = rect(390, 390, 25, 50);
 	}
-	sword = rect(30, 30, 40, 40);
+	sword = rect(-30, -30, 40, 40);
+	scythe = rect(-30, -30, 150, 150);
 	player.velocity = { x: 0, y: 0 };
 	gameOver = false;
+	currWep = scythe;
 
 	loadArea(lvlArray);
 	//createSnakes();
@@ -124,13 +133,6 @@ function movePlayer(p, vx, vy) {
 
 	// move right
 	if(p.x > 960) {
-		/*if(areas[currLvlArr.x, currLvlArr.y].indexOf("top") >= 0) {
-			areaName = "topRight";
-		}
-		else {
-			areaName = "bottomRight";
-		}*/
-
 		currLvlArr.x += 1;
 
 		loadGame(areas[currLvlArr.x][currLvlArr.y]);
@@ -139,13 +141,6 @@ function movePlayer(p, vx, vy) {
 
 	// move left
 	if(p.x < 0) {
-		/*if(areaName.indexOf("top") >= 0) {
-			areaName = "topLeft";
-		}
-		else {
-			areaName = "bottomLeft";
-		}*/
-
 		currLvlArr.x -= 1;
 
 		loadGame(areas[currLvlArr.x][currLvlArr.y]);
@@ -154,13 +149,6 @@ function movePlayer(p, vx, vy) {
 
 	// move down	
 	if(p.y > 540) {
-		/*if(areaName.indexOf("Left") >= 0) {
-			areaName = "bottomLeft";
-		}
-		else {
-			areaName = "bottomRight";
-		}*/
-
 		currLvlArr.y += 1;
 
 		loadGame(areas[currLvlArr.x][currLvlArr.y]);
@@ -169,13 +157,6 @@ function movePlayer(p, vx, vy) {
 
 	// move up
 	if(p.y < 0) {
-		/*if(areaName.indexOf("Left") >= 0) {
-			areaName = "topLeft";
-		}
-		else {
-			areaName = "topRight";
-		}*/
-
 		currLvlArr.y -= 1;
 
 		loadGame(areas[currLvlArr.x][currLvlArr.y]);
@@ -264,7 +245,7 @@ function moveEnemy(p, vx, vy, index, enemy) {
 			playerHealth--;
 		}
 	}
-    if (overlap(p, sword)) {
+    if (overlap(p, currWep)) {
 		score += 100;
 		removeEnemy(enemy, index);
 
@@ -335,14 +316,14 @@ function draw() {
 	if(frameSet >= 1) {
 		frameSet += 1;
 	}
-	if(frameSet > 45) {
+	if(frameSet > 30) {
 		frameSet = 0;
 	}
 
 	var c = document.getElementById('screen').getContext('2d');
 
 	// draw background
-	c.fillStyle = '#000';
+	c.fillStyle = '#222';
 	c.fillRect(0, 0, c.canvas.width, c.canvas.height);
 
 	drawHealth(c);
@@ -374,13 +355,13 @@ function draw() {
         c.drawImage(dImg, player.x - 6, player.y - 5);
 	}
     
-	// draw sword on F key press
+	// draw currWep on F key press
 	if(keyPressed[70] && frameSet == 0) {
 		frameSet = 1;
 	}
 
 	if(frameSet != 0) {
-		createSwordAnimation(c, frameNum);
+		createWepAnimation(c);
 	}
 
 	// draw level with blocks
@@ -447,44 +428,51 @@ function drawHealth(c) {
 }
 
 
-function createSwordAnimation(c) {
+function createWepAnimation(c) {
 	var xLoc, yLoc, sw, lr = false;
+
+	// allow a weapon switch to add later
+	var currWepRImg = wsRimg, currWepLImg = wsLimg, currWepUImg = wsUimg, currWepDImg = wsDimg;
 
 		switch(img.src.substr(img.src.indexOf("player_"))) {
 			case "player_r.png":
-				xLoc = 14, yLoc = -6, sw = swRimg, lr = true;
+				xLoc = -5, yLoc = -42, sw = currWepRImg, lr = true;
+				// sword: xLoc = 14, yLoc = -6
 				break;
 			case "player_l.png":
-				xLoc = -24, yLoc = -6, sw = swLimg, lr = true;
+				xLoc = -90, yLoc = -42, sw = currWepLImg, lr = true;
+				// sword: xLoc = -24, yLoc = -6
 				break;
 			case "player_u.png":
-				xLoc = -3, yLoc = -8, sw = swUimg, lr = false;
+				xLoc = -62, yLoc = -65, sw = currWepUImg, lr = false;
+				// sword: xLoc = -3, yLoc = -8
 				break;
 			case "player_d.png":
-				xLoc = -22, yLoc = 10, sw = swDimg, lr = false;
+				xLoc = -75, yLoc = 25, sw = currWepDImg, lr = false;
+				// sword: xLoc = -22, yLoc = 10
 				break;
 		}
 
-		sword.x = player.x + xLoc;
-		sword.y = player.y + yLoc;
+		currWep.x = player.x + xLoc;
+		currWep.y = player.y + yLoc;
 		var imgX = 0, imgY = 0;
 
 		if(lr) {
-			imgY = Math.round(frameSet / 5) * 40;
+			imgY = Math.round(frameSet / 5) * 150;
 		}
 		else {
-			imgX = Math.round(frameSet / 5) * 40;
+			imgX = Math.round(frameSet / 5) * 150;
 		}
 
 		c.drawImage(sw,
 		    imgX,
 		    imgY,
-		    sword.w,
-		    sword.h,
-		    sword.x,
-		    sword.y,
-		    sword.w,
-		    sword.h);
+		    currWep.w,
+		    currWep.h,
+		    currWep.x,
+		    currWep.y,
+		    currWep.w,
+		    currWep.h);
 }
 
 
