@@ -5,7 +5,7 @@ var keyPressed = {};
 var playerHealth = 3;
 var currLvlArr = { x: 0, y: 0 };
 
-var frameNum = 0, frameSet = 0, numberOfFrames = 9;
+var frameNum = 0, frameSet = 0;
 
 document.onkeydown = function (e) { keyPressed[e.which] = true };
 document.onkeyup = function (e) { keyPressed[e.which] = false };
@@ -53,13 +53,13 @@ function loadGame(lvlArray) {
 	snakes = [];
 	bats = [];
 	healthPickups = [];
-	score = 0;
-	playerHealth = 3;
+	//score = 0;
+	//playerHealth = 3;
 	if(player === null) {
 		player = rect(390, 390, 25, 50);
 	}
-	sword = rect(-30, -30, 40, 40);
-	scythe = rect(-30, -30, 150, 150);
+	sword = rect(-50, -50, 40, 40);
+	scythe = rect(-50, -50, 150, 150);
 	player.velocity = { x: 0, y: 0 };
 	gameOver = false;
 	currWep = scythe;
@@ -298,14 +298,6 @@ function update() {
 		}
         moveEnemy(bats[i], bats[i].velocity.x, bats[i].velocity.y, i, "bat");
 	}
-    
-    /*if(frameNum % 120 === 0 && frameNum !== 0) {
-        var newSnakeX = Math.round(Math.random()) === 1 ? 700 : 260;
-        var newSnakeY = Math.round(Math.random()) === 1 ? 700 : 260;
-        
-        snakes.push(snakeEnemy(newSnakeX, newSnakeY, 25, 25));
-        snakes[snakes.length - 1].velocity = { x: 0, y: 0 };
-    }*/
 	
 	document.getElementById("score").innerHTML = score.toString();
 }
@@ -313,6 +305,8 @@ function update() {
 
 // renders a frame
 function draw() {
+	var stoneCount = 1;
+
 	if(frameSet >= 1) {
 		frameSet += 1;
 	}
@@ -366,7 +360,6 @@ function draw() {
 
 	// draw level with blocks
 	var boundImg = document.getElementById("boundary");
-	var stoneImg = document.getElementById("stone");
 	var treeTopImg = document.getElementById("treeTop");
 	var treeBottomImg = document.getElementById("treeBottom");
 	
@@ -380,7 +373,14 @@ function draw() {
 				imgType = boundImg;
 				break;
 			case "stone":
-				imgType = stoneImg;
+				imgType = document.getElementById("stone" + stoneCount);
+				if(stoneCount >= 4) {
+					stoneCount = 1;
+				}
+				else
+				{
+					stoneCount++;
+				}
 				break;
 			case "treeTop":
 				imgType = treeTopImg;
@@ -479,7 +479,7 @@ function createWepAnimation(c) {
 // set up the game loop
 window.onload = function() {
 	setInterval(function() {
-		if(gameOver == false) {            
+		if(gameOver == false) {
 			update();
 			draw();
 		}
