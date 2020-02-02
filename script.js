@@ -85,7 +85,7 @@ function loadArea(lvlArray) {
 					break;
 				case "o":
 					block = rect(n * 20, i * 20, 20, 20);
-					block.type = "stone";
+					block.type = "stone" + (Math.floor(Math.random() * 4) + 1);
 					rects.push(block);
 					break;
 				case "^":
@@ -305,8 +305,6 @@ function update() {
 
 // renders a frame
 function draw() {
-	var stoneCount = 1;
-
 	if(frameSet >= 1) {
 		frameSet += 1;
 	}
@@ -357,7 +355,21 @@ function draw() {
 	if(frameSet != 0) {
 		createWepAnimation(c);
 	}
+	
+	drawLevelBlocks(c);
+	drawEnemies(c);
+}
 
+
+function drawHealth(c) {
+	for(var i = 1; i <= playerHealth; i++) {
+		var offsetX = -5;
+		c.drawImage(heart, offsetX + (i * 20) + 10, 20);
+	}
+}
+
+
+function drawLevelBlocks(c) {
 	// draw level with blocks
 	var boundImg = document.getElementById("boundary");
 	var treeTopImg = document.getElementById("treeTop");
@@ -372,15 +384,17 @@ function draw() {
 			case "boundary":
 				imgType = boundImg;
 				break;
-			case "stone":
-				imgType = document.getElementById("stone" + stoneCount);
-				if(stoneCount >= 4) {
-					stoneCount = 1;
-				}
-				else
-				{
-					stoneCount++;
-				}
+			case "stone1":
+				imgType = document.getElementById("stone1");
+				break;
+			case "stone2":
+				imgType = document.getElementById("stone2");
+				break;
+			case "stone3":
+				imgType = document.getElementById("stone3");
+				break;
+			case "stone4":
+				imgType = document.getElementById("stone4");
 				break;
 			case "treeTop":
 				imgType = treeTopImg;
@@ -391,7 +405,10 @@ function draw() {
 		}
 		c.drawImage(imgType, r.x, r.y);
 	}
-	
+}
+
+
+function drawEnemies(c) {
 	var snImg = document.getElementById('snake_l');
     var snRImg = document.getElementById('snake_r');
     if (snakes.length > 0) {
@@ -416,14 +433,6 @@ function draw() {
 		for(var i = 0; i < healthPickups.length; i++) {
 			c.drawImage(heartPickup, healthPickups[i].x, healthPickups[i].y);
 		}
-	}
-}
-
-
-function drawHealth(c) {
-	for(var i = 1; i <= playerHealth; i++) {
-		var offsetX = -5;
-		c.drawImage(heart, offsetX + (i * 20) + 10, 20);
 	}
 }
 
