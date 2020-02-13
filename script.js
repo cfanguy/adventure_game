@@ -87,12 +87,12 @@ function loadArea(lvlArray) {
 					break;
 				case "^":
 					block = rect(n * 20, i * 20, 20, 20);
-					block.type = "treeTop";
+					block.type = "cactusTop";
 					rects.push(block);
 					break;
 				case "x":
 					block = rect(n * 20, i * 20, 20, 20);
-					block.type = "treeBottom";
+					block.type = "cactusBottom";
 					rects.push(block);
 					break;
 				case "S":
@@ -369,8 +369,8 @@ function drawHealth(c) {
 function drawLevelBlocks(c) {
 	// draw level with blocks
 	var boundImg = document.getElementById("boundary");
-	var treeTopImg = document.getElementById("treeTop");
-	var treeBottomImg = document.getElementById("treeBottom");
+	var cactusTopImg = document.getElementById("cactusTop");
+	var cactusBottomImg = document.getElementById("cactusBottom");
 	
 	// default boundary block type is boundary block
 	var imgType = boundImg;
@@ -393,11 +393,11 @@ function drawLevelBlocks(c) {
 			case "stone4":
 				imgType = document.getElementById("stone4");
 				break;
-			case "treeTop":
-				imgType = treeTopImg;
+			case "cactusTop":
+				imgType = cactusTopImg;
 				break;
-			case "treeBottom":
-				imgType = treeBottomImg;
+			case "cactusBottom":
+				imgType = cactusBottomImg;
 				break;
 		}
 		c.drawImage(imgType, r.x, r.y);
