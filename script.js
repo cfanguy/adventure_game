@@ -100,7 +100,7 @@ function loadArea(lvlArray) {
 					snakes[snakes.length - 1].velocity = { x: 0, y: 0 };
 					break;
 				case "B":
-					bats.push(batEnemy(n * 20, i * 20, 30, 15));
+					bats.push(batEnemy(n * 20, i * 20, 20, 16));
 					bats[bats.length - 1].velocity = { x: 0, y: 0 };
 				break;
 				case "-":
