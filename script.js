@@ -53,8 +53,6 @@ function loadGame(lvlArray) {
 	snakes = [];
 	bats = [];
 	healthPickups = [];
-	//score = 0;
-	//playerHealth = 3;
 	if(player === null) {
 		player = rect(390, 390, 25, 50);
 	}
@@ -65,7 +63,6 @@ function loadGame(lvlArray) {
 	currWep = scythe;
 
 	loadArea(lvlArray);
-	//createSnakes();
 }
 
 
@@ -99,7 +96,7 @@ function loadArea(lvlArray) {
 					rects.push(block);
 					break;
 				case "S":
-					snakes.push(snakeEnemy(n * 20, i * 20, 30, 15));
+					snakes.push(snakeEnemy(n * 20, i * 20, 30, 30));
 					snakes[snakes.length - 1].velocity = { x: 0, y: 0 };
 					break;
 				case "B":
