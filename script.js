@@ -1,32 +1,11 @@
 var rects = [];
-var snakes = [];
-var score = 0;
-var keyPressed = {};
-var playerHealth = 3;
+var keyPressed = {}, wep = {}, pickup = {}, plImg = {};
+var score = 0, playerHealth = 3, frameNum = 0, frameSet = 0;
 var currLvlArr = { x: 0, y: 0 };
-
-var frameNum = 0, frameSet = 0;
+var snakes, bats, levelBlocks, healthPickups, currLvl;
 
 document.onkeydown = function (e) { keyPressed[e.which] = true };
 document.onkeyup = function (e) { keyPressed[e.which] = false };
-
-// set initial player img
-var img = document.getElementById("player_r");
-
-// sword animation
-var swRimg = document.getElementById('sword_r');
-var swLimg = document.getElementById('sword_l');
-var swUimg = document.getElementById('sword_u');
-var swDimg = document.getElementById('sword_d');
-
-// warscythe animation
-var wsRimg = document.getElementById('scythe_r');
-var wsLimg = document.getElementById('scythe_l');
-var wsUimg = document.getElementById('scythe_u');
-var wsDimg = document.getElementById('scythe_d');
-
-var heart = document.getElementById('heart');
-var heartPickup = document.getElementById('heartPickup');
 
 var gameOver = false;
 
@@ -34,7 +13,13 @@ var gameOver = false;
 var player = null, sword, scythe, currWep;
 
 (function(){
-	loadGame(areas[0][0]);
+	initImages();
+
+	var c = document.getElementById('screen').getContext('2d');
+	c.fillStyle = '#182b18';
+
+	currLvl = overworld;
+	loadGame(currLvl[0][0]);
 })();
 
 
@@ -48,10 +33,32 @@ function batEnemy(x, y, w, h) {
 }
 
 
+function initImages () {
+	// sword animation
+	wep.swRimg = document.getElementById('sword_r');
+	wep.swLimg = document.getElementById('sword_l');
+	wep.swUimg = document.getElementById('sword_u');
+	wep.swDimg = document.getElementById('sword_d');
+
+	// warscythe animation
+	wep.wsRimg = document.getElementById('scythe_r');
+	wep.wsLimg = document.getElementById('scythe_l');
+	wep.wsUimg = document.getElementById('scythe_u');
+	wep.wsDimg = document.getElementById('scythe_d');
+
+	plImg.img = document.getElementById("player_d");	
+	plImg.heart = document.getElementById('heart');
+
+	pickup.heartPickup = document.getElementById('heartPickup');
+}
+
+
 function loadGame(lvlArray) {
 	rects = [];
 	snakes = [];
 	bats = [];
+	levelBlocks = [];
+	level = {};
 	healthPickups = [];
 	if(player === null) {
 		player = rect(390, 390, 25, 50);
@@ -102,7 +109,12 @@ function loadArea(lvlArray) {
 				case "B":
 					bats.push(batEnemy(n * 20, i * 20, 20, 16));
 					bats[bats.length - 1].velocity = { x: 0, y: 0 };
-				break;
+					break;
+				case "C":
+					level.coords = rect(n * 20, i * 20, 20, 20);
+					level.type = "cave";
+					levelBlocks.push(level);
+					break;
 				case "-":
 					break;
 			}
@@ -132,7 +144,7 @@ function movePlayer(p, vx, vy) {
 	if(p.x > 960) {
 		currLvlArr.x += 1;
 
-		loadGame(areas[currLvlArr.x][currLvlArr.y]);
+		loadGame(currLvl[currLvlArr.x][currLvlArr.y]);
 		p.x = 5;
 	}
 
@@ -140,7 +152,7 @@ function movePlayer(p, vx, vy) {
 	if(p.x < 0) {
 		currLvlArr.x -= 1;
 
-		loadGame(areas[currLvlArr.x][currLvlArr.y]);
+		loadGame(currLvl[currLvlArr.x][currLvlArr.y]);
 		p.x = 955;
 	}
 
@@ -148,7 +160,7 @@ function movePlayer(p, vx, vy) {
 	if(p.y > 540) {
 		currLvlArr.y += 1;
 
-		loadGame(areas[currLvlArr.x][currLvlArr.y]);
+		loadGame(currLvl[currLvlArr.x][currLvlArr.y]);
 		p.y = 5;
 	}
 
@@ -156,7 +168,7 @@ function movePlayer(p, vx, vy) {
 	if(p.y < 0) {
 		currLvlArr.y -= 1;
 
-		loadGame(areas[currLvlArr.x][currLvlArr.y]);
+		loadGame(currLvl[currLvlArr.x][currLvlArr.y]);
 		p.y = 535;
 	}
 
@@ -184,6 +196,19 @@ function movePlayer(p, vx, vy) {
 		if (overlap(c, healthPickups[i])) {
 			playerHealth++;
 			healthPickups.splice(i, 1);
+		}
+	}
+
+	for (i = 0; i < levelBlocks.length; i++) {
+		if (overlap(c, levelBlocks[i].coords)) {
+			switch (levelBlocks[i].type) {
+				case "cave":
+					currLvl = cave;
+					var c = document.getElementById('screen').getContext('2d');
+					c.fillStyle = '#222';
+					break;
+			}
+			loadGame(currLvl[0][0]);
 		}
 	}
 }
@@ -310,9 +335,6 @@ function draw() {
 	}
 
 	var c = document.getElementById('screen').getContext('2d');
-
-	// draw background
-	c.fillStyle = '#222';
 	c.fillRect(0, 0, c.canvas.width, c.canvas.height);
 
 	drawHealth(c);
@@ -320,21 +342,21 @@ function draw() {
 	// draw player
 	if(!gameOver) {
 		if(keyPressed[68]) {
-			img = document.getElementById("player_r");
+			plImg.img = document.getElementById("player_r");
 		}
 		else
 			if(keyPressed[65]) {
-				img = document.getElementById("player_l");
+				plImg.img = document.getElementById("player_l");
 			}
 			else
 				if(keyPressed[83]) {
-					img = document.getElementById("player_d");
+					plImg.img = document.getElementById("player_d");
 				}
 				else
 					if(keyPressed[87]) {
-						img = document.getElementById("player_u");
+						plImg.img = document.getElementById("player_u");
 					}
-		c.drawImage(img, player.x - 6, player.y - 5);
+		c.drawImage(plImg.img, player.x - 6, player.y - 5);
 	}
 	else {
 		var gImg = document.getElementById('gameover');
@@ -355,13 +377,14 @@ function draw() {
 	
 	drawLevelBlocks(c);
 	drawEnemies(c);
+	drawPickupsAndOther(c);
 }
 
 
 function drawHealth(c) {
 	for(var i = 1; i <= playerHealth; i++) {
 		var offsetX = -5;
-		c.drawImage(heart, offsetX + (i * 20) + 10, 20);
+		c.drawImage(plImg.heart, offsetX + (i * 20) + 10, 20);
 	}
 }
 
@@ -425,10 +448,24 @@ function drawEnemies(c) {
 			c.drawImage(batImg, bats[i].x, bats[i].y);
         }
 	}
-	
+}
+
+
+function drawPickupsAndOther(c) {
 	if(healthPickups.length > 0) {
 		for(var i = 0; i < healthPickups.length; i++) {
-			c.drawImage(heartPickup, healthPickups[i].x, healthPickups[i].y);
+			c.drawImage(pickup.heartPickup, healthPickups[i].x, healthPickups[i].y);
+		}
+	}
+
+	var caveImg = document.getElementById("cave");
+	if(levelBlocks.length > 0) {
+		for(var i = 0; i < levelBlocks.length; i++) {
+			switch (levelBlocks[i].type) {
+				case "cave":
+					c.drawImage(caveImg, levelBlocks[i].coords.x, levelBlocks[i].coords.y);
+					break;
+			}
 		}
 	}
 }
@@ -438,9 +475,12 @@ function createWepAnimation(c) {
 	var xLoc, yLoc, sw, lr = false;
 
 	// allow a weapon switch to add later
-	var currWepRImg = wsRimg, currWepLImg = wsLimg, currWepUImg = wsUimg, currWepDImg = wsDimg;
+	var currWepRImg = wep.wsRimg,
+		currWepLImg = wep.wsLimg,
+		currWepUImg = wep.wsUimg,
+		currWepDImg = wep.wsDimg;
 
-		switch(img.src.substr(img.src.indexOf("player_"))) {
+		switch(plImg.img.src.substr(plImg.img.src.indexOf("player_"))) {
 			case "player_r.png":
 				xLoc = -5, yLoc = -42, sw = currWepRImg, lr = true;
 				// sword: xLoc = 14, yLoc = -6
@@ -493,9 +533,9 @@ window.onload = function() {
 }
 
 
-
 document.getElementById("reset").addEventListener("click", reset, false);
 function reset() {
-	areaName = "topLeft";
-	loadGame();
+	score = 0, playerHealth = 3, frameNum = 0, frameSet = 0;
+	player = rect(390, 390, 25, 50);
+	loadGame(overworld[0][0]);
 }
