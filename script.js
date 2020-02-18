@@ -556,3 +556,47 @@ function reset() {
 	player = rect(390, 390, 25, 50);
 	loadGame(overworld[0][0]);
 }
+
+
+// mobile functionality
+document.getElementById("upArrow").addEventListener("touchstart", function(e) {
+	touchEvent(e, 87, true)
+});
+document.getElementById("upArrow").addEventListener("touchend", function(e) {
+	touchEvent(e, 87, false)
+});
+
+document.getElementById("leftArrow").addEventListener("touchstart", function(e) {
+	touchEvent(e, 65, true)
+});
+document.getElementById("leftArrow").addEventListener("touchend", function(e) {
+	touchEvent(e, 65, false)
+});
+
+document.getElementById("rightArrow").addEventListener("touchstart", function(e) {
+	touchEvent(e, 68, true)
+});
+document.getElementById("rightArrow").addEventListener("touchend", function(e) {
+	touchEvent(e, 68, false)
+});
+
+document.getElementById("downArrow").addEventListener("touchstart", function(e) {
+	touchEvent(e, 83, true)
+});
+document.getElementById("downArrow").addEventListener("touchend", function(e) {
+	touchEvent(e, 83, false)
+});
+
+document.getElementById("attackBtn").addEventListener("touchstart", function(e) {
+	touchEvent(e, 70, true)
+});
+document.getElementById("attackBtn").addEventListener("touchend", function(e) {
+	touchEvent(e, 70, false)
+});
+
+function touchEvent(e, keyNum, typeBool) {
+    if(e.touches) {
+		keyPressed[keyNum] = typeBool;
+		e.preventDefault();
+    }
+}

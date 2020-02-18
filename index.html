@@ -53,12 +53,12 @@
 		<div style="width:960px;margin-left:auto;margin-right:auto;text-align: center;">
 			<canvas id="screen" width="960" height="540" ></canvas>
 			<div style="width:300px;float:left;">
-				<a onmousedown="keyPressed[87] = true;" onmouseup="keyPressed[87] = false;" class="mobileControls" href="#">^</a>
+				<a id="upArrow" class="mobileControls" href="#">^</a>
 				<br>
-				<a onmousedown="keyPressed[65] = true;" onmouseup="keyPressed[65] = false;" class="mobileControls" href="#"><</a>
-				<a onmousedown="keyPressed[68] = true;" onmouseup="keyPressed[68] = false;" class="mobileControls" style="margin-left: 60px;" href="#">></a>
+				<a id="leftArrow" class="mobileControls" href="#"><</a>
+				<a id="rightArrow" class="mobileControls" style="margin-left: 60px;" href="#">></a>
 				<br>
-				<a onmousedown="keyPressed[83] = true;" onmouseup="keyPressed[83] = false;" class="mobileControls" href="#">v</a>
+				<a id="downArrow" class="mobileControls" href="#">v</a>
 			</div>
 			<div style="width:360px;float:left;">
 				<button id="reset" type="button" style="width:100px;">Reset Game</button>
@@ -66,11 +66,11 @@
 				<span style="color: white;">Score:&nbsp;</span>
 				<span id="score" style="color: white;">0</span>
 				<br /><br />
-				<span style="color: white;">Move with the WASD or arrow keys and attack with F key.</span>
+				<span style="color: white;">Move with the WASD or arrow keys on mobile and attack with F key.</span>
 			</div>
 			<div style="width:300px;float:left;">
 				<br>
-				<a onmousedown="keyPressed[70] = true;" onmouseup="keyPressed[70] = false;" class="mobileControls" href="#">Attack</a>
+				<a id="attackBtn" class="mobileControls" href="#">Attack</a>
 			</div>
         </div>
 		
