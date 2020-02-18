@@ -102,6 +102,16 @@ function loadArea(lvlArray) {
 					block.type = "cactusBottom";
 					rects.push(block);
 					break;
+				case "g":
+					block = rect(n * 20, i * 20, 20, 20);
+					block.type = "grassBoundary";
+					rects.push(block);
+					break;
+				case "*":
+					block = rect(n * 20, i * 20, 20, 20);
+					block.type = "bush";
+					rects.push(block);
+					break;
 				case "S":
 					snakes.push(snakeEnemy(n * 20, i * 20, 30, 30));
 					snakes[snakes.length - 1].velocity = { x: 0, y: 0 };
@@ -394,6 +404,8 @@ function drawLevelBlocks(c) {
 	var boundImg = document.getElementById("boundary");
 	var cactusTopImg = document.getElementById("cactusTop");
 	var cactusBottomImg = document.getElementById("cactusBottom");
+	var grassBoundaryImg = document.getElementById("grassBoundary");
+	var bushImg = document.getElementById("bush");
 	
 	// default boundary block type is boundary block
 	var imgType = boundImg;
@@ -421,6 +433,12 @@ function drawLevelBlocks(c) {
 				break;
 			case "cactusBottom":
 				imgType = cactusBottomImg;
+				break;
+			case "grassBoundary":
+				imgType = grassBoundaryImg;
+				break;
+			case "bush":
+				imgType = bushImg;
 				break;
 		}
 		c.drawImage(imgType, r.x, r.y);
@@ -458,7 +476,7 @@ function drawPickupsAndOther(c) {
 		}
 	}
 
-	var caveImg = document.getElementById("cave");
+	var caveImg = document.getElementById("caveEntrance");
 	if(levelBlocks.length > 0) {
 		for(var i = 0; i < levelBlocks.length; i++) {
 			switch (levelBlocks[i].type) {
