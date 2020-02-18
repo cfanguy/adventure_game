@@ -246,7 +246,6 @@ function moveEnemy(p, vx, vy, index, enemy) {
 		p.x += vx;
 	}
     
- 
 	// move enemy along y axis, checking blocks and if within frame
 	for (i = 0; i < rects.length; i++) {
 		c = { x: p.x, y: p.y + vy, w: p.w, h: p.h }
