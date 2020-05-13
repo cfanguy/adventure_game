@@ -112,6 +112,11 @@ function loadArea(lvlArray) {
 					block.type = "bush";
 					rects.push(block);
 					break;
+				case "l":
+					block = rect(n * 20, i * 20, 20, 20);
+					block.type = "volBoundary";
+					rects.push(block);
+					break;
 				case "S":
 					snakes.push(snakeEnemy(n * 20, i * 20, 30, 30));
 					snakes[snakes.length - 1].velocity = { x: 0, y: 0 };
@@ -123,7 +128,14 @@ function loadArea(lvlArray) {
 				case "C":
 					level.coords = rect(n * 20, i * 20, 20, 20);
 					level.type = "cave";
-					levelBlocks.push(level);
+					const caveLvl = JSON.parse(JSON.stringify(level));
+					levelBlocks.push(caveLvl);
+					break;
+				case "V":
+					level.coords = rect(n * 20, i * 20, 20, 20);
+					level.type = "volcano";
+					const volLvl = JSON.parse(JSON.stringify(level));
+					levelBlocks.push(volLvl);
 					break;
 				case "-":
 					break;
@@ -214,6 +226,11 @@ function movePlayer(p, vx, vy) {
 			switch (levelBlocks[i].type) {
 				case "cave":
 					currLvl = cave;
+					var c = document.getElementById('screen').getContext('2d');
+					c.fillStyle = '#222';
+					break;
+				case "volcano":
+					currLvl = volcano;
 					var c = document.getElementById('screen').getContext('2d');
 					c.fillStyle = '#222';
 					break;
@@ -405,6 +422,7 @@ function drawLevelBlocks(c) {
 	var cactusBottomImg = document.getElementById("cactusBottom");
 	var grassBoundaryImg = document.getElementById("grassBoundary");
 	var bushImg = document.getElementById("bush");
+	var volBoundaryImg = document.getElementById("volBoundary");
 	
 	// default boundary block type is boundary block
 	var imgType = boundImg;
@@ -435,6 +453,9 @@ function drawLevelBlocks(c) {
 				break;
 			case "grassBoundary":
 				imgType = grassBoundaryImg;
+				break;
+			case "volBoundary":
+				imgType = volBoundaryImg;
 				break;
 			case "bush":
 				imgType = bushImg;
@@ -476,11 +497,15 @@ function drawPickupsAndOther(c) {
 	}
 
 	var caveImg = document.getElementById("caveEntrance");
+	var volImg = document.getElementById("volcanoEntrance");
 	if(levelBlocks.length > 0) {
 		for(var i = 0; i < levelBlocks.length; i++) {
 			switch (levelBlocks[i].type) {
 				case "cave":
 					c.drawImage(caveImg, levelBlocks[i].coords.x, levelBlocks[i].coords.y);
+					break;
+				case "volcano":
+					c.drawImage(volImg, levelBlocks[i].coords.x, levelBlocks[i].coords.y);
 					break;
 			}
 		}
@@ -555,48 +580,4 @@ function reset() {
 	score = 0, playerHealth = 3, frameNum = 0, frameSet = 0;
 	player = rect(390, 390, 25, 50);
 	loadGame(overworld[0][0]);
-}
-
-
-// mobile functionality
-document.getElementById("upArrow").addEventListener("touchstart", function(e) {
-	touchEvent(e, 87, true)
-});
-document.getElementById("upArrow").addEventListener("touchend", function(e) {
-	touchEvent(e, 87, false)
-});
-
-document.getElementById("leftArrow").addEventListener("touchstart", function(e) {
-	touchEvent(e, 65, true)
-});
-document.getElementById("leftArrow").addEventListener("touchend", function(e) {
-	touchEvent(e, 65, false)
-});
-
-document.getElementById("rightArrow").addEventListener("touchstart", function(e) {
-	touchEvent(e, 68, true)
-});
-document.getElementById("rightArrow").addEventListener("touchend", function(e) {
-	touchEvent(e, 68, false)
-});
-
-document.getElementById("downArrow").addEventListener("touchstart", function(e) {
-	touchEvent(e, 83, true)
-});
-document.getElementById("downArrow").addEventListener("touchend", function(e) {
-	touchEvent(e, 83, false)
-});
-
-document.getElementById("attackBtn").addEventListener("touchstart", function(e) {
-	touchEvent(e, 70, true)
-});
-document.getElementById("attackBtn").addEventListener("touchend", function(e) {
-	touchEvent(e, 70, false)
-});
-
-function touchEvent(e, keyNum, typeBool) {
-    if(e.touches) {
-		keyPressed[keyNum] = typeBool;
-		e.preventDefault();
-    }
 }
