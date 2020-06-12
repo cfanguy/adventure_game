@@ -2,7 +2,7 @@ var rects = [];
 var keyPressed = {}, wep = {}, pickup = {}, plImg = {};
 var score = 0, playerHealth = 3, frameNum = 0, frameSet = 0;
 var currLvlArr = { x: 0, y: 0 };
-var snakes, bats, levelBlocks, healthPickups, currLvl;
+var snakes, bats, level, levelBlocks, levelSet, healthPickups, currLvl;
 
 document.onkeydown = function (e) { keyPressed[e.which] = true };
 document.onkeyup = function (e) { keyPressed[e.which] = false };
@@ -15,9 +15,7 @@ var player = null, sword, scythe, currWep;
 (function(){
 	initImages();
 
-	var c = document.getElementById('screen').getContext('2d');
-	c.fillStyle = '#182b18';
-
+	levelSet = "overworld";
 	currLvl = overworld;
 	loadGame(currLvl[0][0]);
 })();
@@ -226,13 +224,13 @@ function movePlayer(p, vx, vy) {
 			switch (levelBlocks[i].type) {
 				case "cave":
 					currLvl = cave;
+					levelSet = "cave";
 					var c = document.getElementById('screen').getContext('2d');
-					c.fillStyle = '#222';
 					break;
 				case "volcano":
 					currLvl = volcano;
+					levelSet = "volcano";
 					var c = document.getElementById('screen').getContext('2d');
-					c.fillStyle = '#222';
 					break;
 			}
 			loadGame(currLvl[0][0]);
@@ -362,6 +360,18 @@ function draw() {
 
 	var c = document.getElementById('screen').getContext('2d');
 	c.fillRect(0, 0, c.canvas.width, c.canvas.height);
+
+	switch(levelSet) {
+		case "overworld":
+			c.drawImage(grassBG, 0, 0);
+			break;
+		case "cave":
+			c.drawImage(caveBG, 0, 0);
+			break;
+		case "volcano":
+			c.drawImage(volcanoBG, 0, 0);
+			break;
+	}
 
 	drawHealth(c);
 	
@@ -577,6 +587,7 @@ window.onload = function() {
 
 document.getElementById("reset").addEventListener("click", reset, false);
 function reset() {
+	levelSet = "overworld";
 	score = 0, playerHealth = 3, frameNum = 0, frameSet = 0;
 	player = rect(390, 390, 25, 50);
 	loadGame(overworld[0][0]);
