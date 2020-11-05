@@ -59,7 +59,7 @@ function loadGame(lvlArray) {
 	level = {};
 	healthPickups = [];
 	if(player === null) {
-		player = rect(390, 390, 25, 50);
+		player = rect(390, 390, 32, 32);
 	}
 	sword = rect(-50, -50, 40, 40);
 	scythe = rect(-50, -50, 150, 150);
@@ -534,19 +534,19 @@ function createWepAnimation(c) {
 
 		switch(plImg.img.src.substr(plImg.img.src.indexOf("player_"))) {
 			case "player_r.png":
-				xLoc = -5, yLoc = -42, sw = currWepRImg, lr = true;
+				xLoc = 8, yLoc = -52, sw = currWepRImg, lr = true;
 				// sword: xLoc = 14, yLoc = -6
 				break;
 			case "player_l.png":
-				xLoc = -90, yLoc = -42, sw = currWepLImg, lr = true;
+				xLoc = -90, yLoc = -52, sw = currWepLImg, lr = true;
 				// sword: xLoc = -24, yLoc = -6
 				break;
 			case "player_u.png":
-				xLoc = -62, yLoc = -65, sw = currWepUImg, lr = false;
+				xLoc = -52, yLoc = -75, sw = currWepUImg, lr = false;
 				// sword: xLoc = -3, yLoc = -8
 				break;
 			case "player_d.png":
-				xLoc = -75, yLoc = 25, sw = currWepDImg, lr = false;
+				xLoc = -74, yLoc = 14, sw = currWepDImg, lr = false;
 				// sword: xLoc = -22, yLoc = 10
 				break;
 		}
@@ -589,6 +589,6 @@ document.getElementById("reset").addEventListener("click", reset, false);
 function reset() {
 	levelSet = "overworld";
 	score = 0, playerHealth = 3, frameNum = 0, frameSet = 0;
-	player = rect(390, 390, 25, 50);
+	player = rect(390, 390, 32, 32);
 	loadGame(overworld[0][0]);
 }
