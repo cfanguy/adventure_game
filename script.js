@@ -17,7 +17,11 @@ var player = null, sword, scythe, currWep;
 
 	levelSet = "overworld";
 	currLvl = overworld;
-	loadGame(currLvl[0][0]);
+
+	//change to overworld numbers
+	var currLvlArr = { x: 0, y: 0 };
+
+	loadGame(currLvl[currLvlArr.x][currLvlArr.y]);
 })();
 
 
@@ -59,7 +63,7 @@ function loadGame(lvlArray) {
 	level = {};
 	healthPickups = [];
 	if(player === null) {
-		player = rect(390, 390, 32, 32);
+		player = rect(190, 390, 32, 32);
 	}
 	sword = rect(-50, -50, 40, 40);
 	scythe = rect(-50, -50, 150, 150);
@@ -113,6 +117,11 @@ function loadArea(lvlArray) {
 				case "l":
 					block = rect(n * 20, i * 20, 20, 20);
 					block.type = "volBoundary";
+					rects.push(block);
+					break;
+				case "e":
+					block = rect(n * 20, i * 20, 20, 20);
+					block.type = "emptyBoundary";
 					rects.push(block);
 					break;
 				case "S":
@@ -363,7 +372,7 @@ function draw() {
 
 	switch(levelSet) {
 		case "overworld":
-			c.drawImage(grassBG, 0, 0);
+			c.drawImage(overWBG[currLvlArr.x][currLvlArr.y], 0, 0);
 			break;
 		case "cave":
 			c.drawImage(caveBG, 0, 0);
@@ -433,6 +442,7 @@ function drawLevelBlocks(c) {
 	var grassBoundaryImg = document.getElementById("grassBoundary");
 	var bushImg = document.getElementById("bush");
 	var volBoundaryImg = document.getElementById("volBoundary");
+	var emptyBoundaryImg = document.getElementById("emptyBoundary");
 	
 	// default boundary block type is boundary block
 	var imgType = caveBoundaryImg;
@@ -466,6 +476,9 @@ function drawLevelBlocks(c) {
 				break;
 			case "volBoundary":
 				imgType = volBoundaryImg;
+				break;
+			case "emptyBoundary":
+				imgType = emptyBoundaryImg;
 				break;
 			case "bush":
 				imgType = bushImg;
@@ -589,6 +602,6 @@ document.getElementById("reset").addEventListener("click", reset, false);
 function reset() {
 	levelSet = "overworld";
 	score = 0, playerHealth = 3, frameNum = 0, frameSet = 0;
-	player = rect(390, 390, 32, 32);
+	player = rect(190, 390, 32, 32);
 	loadGame(overworld[0][0]);
 }

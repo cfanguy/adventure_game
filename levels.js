@@ -3,35 +3,42 @@ var overworld = [
     [[], []],
     [[], []]
 ];
+var overWBG = [
+    [], []
+];
 
 overworld[0][0] = [];
-overworld[0][0].push("ggggggggggggggggggggggggggggggggggggggg+++++++++");
-overworld[0][0].push("g--------------------------------------+++++++++");
-overworld[0][0].push("g--------------------------------------C++++++++");
-overworld[0][0].push("g--------------***-----------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g----**----------------------------------------g");
-overworld[0][0].push("g---------------------o------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g------------------------------------o---------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g---------o------------------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g--------------------------------------**------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g-------***------------------------------------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("g----------------------------------o-----------g");
-overworld[0][0].push("g----------------------------------------------g");
-overworld[0][0].push("lllV-------------------------------------------g");
-overworld[0][0].push("llll-------------------------------------------g");
-overworld[0][0].push("llllgggggggggggggggggggggggggggggggggggggggggggg");
+overworld[0][0].push("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+overworld[0][0].push("e-----------eeee-------------------------ee----e");
+overworld[0][0].push("e-----------eeee-------------------------------e");
+overworld[0][0].push("e-----------eeee-------------------------------e");
+overworld[0][0].push("e-----------eeee-----------------------eee-----e");
+overworld[0][0].push("e-----------eeee------------------ee--e--------e");
+overworld[0][0].push("e-----------eeeee-----------------eeee---------e");
+overworld[0][0].push("e---------eeeeee-------eeee---eeeeeeee---------e");
+overworld[0][0].push("e--------eeee------eeee---eeeeeeeee--e---------e");
+overworld[0][0].push("e-------eeeee-----eeeee--------------eee-------e");
+overworld[0][0].push("e-------eeee-------eeee--------------ee------eee");
+overworld[0][0].push("eeeeeeeeeeee--------eeee-------------ee----eeeee");
+overworld[0][0].push("eeeeee--------------eeee-------------eeeeeeeeeee");
+overworld[0][0].push("eeeee---------------eeee-----------------------e");
+overworld[0][0].push("eeee---------------eeee------------------------e");
+overworld[0][0].push("eeee---------C-----eeee------------------------e");
+overworld[0][0].push("ee-----------------eeee--e---------------------e");
+overworld[0][0].push("ee------------------eeee-----------------------e");
+overworld[0][0].push("e-------------------eeee-----------------------e");
+overworld[0][0].push("e------------------eeee------------------------e");
+overworld[0][0].push("e-----------------eeee-------------------------e");
+overworld[0][0].push("ee-----------------eeeee-----------------------e");
+overworld[0][0].push("ee-----------------eeee------------------------e");
+overworld[0][0].push("ee--eee--------e--eeee-------------------------e");
+overworld[0][0].push("ee--eeeeee---eeeeeeee--------------------------e");
+overworld[0][0].push("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+overworld[0][0].push("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+overWBG[0][0] = overWorldBG00;
+
+//overworld[1][0] = [];
+//overWBG[1][0] = overWorldBG10;
 
 var cave = [
     [[], []],
