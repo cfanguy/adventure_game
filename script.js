@@ -82,7 +82,7 @@ function loadArea(lvlArray) {
 			switch (lvlArray[i][n]) {
 				case "+":
 					block = rect(n * 20, i * 20, 20, 20);
-					block.type = "boundary";
+					block.type = "caveBoundary";
 					rects.push(block);
 					break;
 				case "o":
@@ -427,7 +427,7 @@ function drawHealth(c) {
 
 function drawLevelBlocks(c) {
 	// draw level with blocks
-	var boundImg = document.getElementById("boundary");
+	var caveBoundaryImg = document.getElementById("caveBoundary");
 	var cactusTopImg = document.getElementById("cactusTop");
 	var cactusBottomImg = document.getElementById("cactusBottom");
 	var grassBoundaryImg = document.getElementById("grassBoundary");
@@ -435,13 +435,13 @@ function drawLevelBlocks(c) {
 	var volBoundaryImg = document.getElementById("volBoundary");
 	
 	// default boundary block type is boundary block
-	var imgType = boundImg;
+	var imgType = caveBoundaryImg;
 
 	for (var i = 0; i < rects.length; i++) {
 		var r = rects[i];
 		switch (rects[i].type) {
-			case "boundary":
-				imgType = boundImg;
+			case "caveBoundary":
+				imgType = caveBoundaryImg;
 				break;
 			case "stone1":
 				imgType = document.getElementById("stone1");
